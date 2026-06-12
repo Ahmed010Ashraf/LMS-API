@@ -18,6 +18,10 @@ namespace Presistence.Data.Configurations
                 .HasForeignKey(x => x.LectureId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+
+            builder.HasOne(e => e.Course).WithMany(x => x.Exams)
+                .HasForeignKey(e => e.CourseId);
+
             builder.HasMany(x => x.Questions)
                 .WithOne(x => x.Exam)
                 .HasForeignKey(x => x.ExamId)

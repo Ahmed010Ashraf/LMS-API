@@ -21,6 +21,5 @@ namespace Domain.Entities.EnrollmentEntities
 
         public ApplicationUser Student { get; set; } = null!;
 
-        public Course Course { get; set; } = null!;
     }
 }

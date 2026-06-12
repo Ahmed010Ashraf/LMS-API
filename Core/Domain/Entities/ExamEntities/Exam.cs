@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.CourseEntities;
+using Domain.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,13 @@ namespace Domain.Entities.ExamEntities
 
         public bool IsAvailable { get; set; }
 
+        public Guid CourseId { get; set; }
         public Guid LectureId { get; set; }
 
+        public ExamProviderType examProviderType { get; set; }
+
         public Lecture Lecture { get; set; } = null!;
+        public Course Course { get; set; } = null!;
 
         public ICollection<Question> Questions { get; set; }
             = new HashSet<Question>();

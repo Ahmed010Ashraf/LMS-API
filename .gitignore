@@ -1,0 +1,48 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+bin/
+obj/
+.vs/
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# ASP.NET Core local settings
+appsettings.Development.json
+
+# User secrets
+secrets.json
+
+# Logs
+*.log
+
+# Entity Framework
+*.dbmdl
+
+# NuGet
+packages/
+*.nupkg
+
+# Publish output
+publish/
+
+# Test results
+TestResults/
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -3,6 +3,9 @@ using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data;
 using Presistence.Reposatories;
+using ServicesAbstraction.CourseModule;
+using ServicesImplementation;
+using ServicesImplementation.CourseModule;
 
 namespace LMS.Api
 {
@@ -27,6 +30,8 @@ namespace LMS.Api
 
             builder.Services.AddScoped(typeof(IGenericReposatory<>), typeof(GenericReposatory<>));
             builder.Services.AddScoped<IUniteOfWork, UniteOfWork>();
+            builder.Services.AddAutoMapper(ctf => { },typeof(ServiceProjectReference).Assembly);
+            builder.Services.AddScoped<ICourseService, CourseService>();
 
             var app = builder.Build();
 

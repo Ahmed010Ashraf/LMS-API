@@ -1,4 +1,4 @@
-﻿using Domain.Contracts;
+using Domain.Contracts;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data;
@@ -12,8 +12,6 @@ namespace Presistence.Reposatories
 {
     public class GenericReposatory<TEntity>(AppDbContext _DbContext) : IGenericReposatory<TEntity> where TEntity : BaseEntity
     {
-
-
         public async Task<IEnumerable<TEntity>> GetAllAsync(bool AsNoTracking = false)
         {
             if (AsNoTracking)
@@ -23,15 +21,19 @@ namespace Presistence.Reposatories
             else
             {
                 return await _DbContext.Set<TEntity>().ToListAsync();
-
             }
+        }
+
+  
+        public IQueryable<TEntity> GetQueryable()
+        {
+            return _DbContext.Set<TEntity>().AsNoTracking();
         }
 
         public async Task<TEntity?> GetByIdAsync(Guid id)
         {
             return await _DbContext.Set<TEntity>().FindAsync(id);
         }
-
 
         public async Task AddAsync(TEntity entity)
         {
@@ -43,11 +45,11 @@ namespace Presistence.Reposatories
             _DbContext.Remove(entity);
         }
 
-   
-
         public void Update(TEntity entity)
         {
             _DbContext.Update(entity);
         }
+
+      
     }
 }

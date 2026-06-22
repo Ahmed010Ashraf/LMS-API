@@ -13,7 +13,7 @@ namespace Persentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CourseContoller(ICourseService _courseService) : ControllerBase
+    public class CourseController(ICourseService _courseService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CourseDto>>> GetAll()

@@ -24,7 +24,7 @@ namespace Domain.Entities
 
         public string City { get; set; } = null!;
 
-        public Guid LevelId { get; set; }
+        public Guid? LevelId { get; set; } 
 
         public Level Level { get; set; } = null!;
 

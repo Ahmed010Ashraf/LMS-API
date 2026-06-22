@@ -1,17 +1,20 @@
 
 using Domain.Contracts;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Presistence.Data;
 using Presistence.Reposatories;
 using ServicesAbstraction.CourseModule;
 using ServicesImplementation;
 using ServicesImplementation.CourseModule;
+using System.Threading.Tasks;
 
 namespace LMS.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +26,15 @@ namespace LMS.Api
             builder.Services.AddSwaggerGen();
 
 
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(opt =>
+            {
+                opt.Password.RequireUppercase = true;
+                opt.Password.RequireLowercase = true;
+                opt.Password.RequireNonAlphanumeric = true;
+                opt.Password.RequireDigit = true;
+                opt.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<AppDbContext>();
+
             builder.Services.AddDbContext<AppDbContext>(opt =>
             {
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -32,8 +44,27 @@ namespace LMS.Api
             builder.Services.AddScoped<IUniteOfWork, UniteOfWork>();
             builder.Services.AddAutoMapper(ctf => { },typeof(ServiceProjectReference).Assembly);
             builder.Services.AddScoped<ICourseService, CourseService>();
+            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             var app = builder.Build();
+
+            using var scope = app.Services.CreateScope();
+            var dbInitService = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+            await dbInitService.InitializeIdentityAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

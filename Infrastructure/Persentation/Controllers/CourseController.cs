@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Persentation.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/[controller]")]
     public class CourseController(ICourseService _courseService) : ControllerBase
     {
         [HttpGet]

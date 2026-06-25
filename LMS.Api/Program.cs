@@ -1,13 +1,22 @@
 
 using Domain.Contracts;
 using Domain.Entities;
+using LMS.Api.Factories;
+using LMS.Api.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Presistence.Data;
 using Presistence.Reposatories;
+using ServicesAbstraction.Authentication;
 using ServicesAbstraction.CourseModule;
 using ServicesImplementation;
+using ServicesImplementation.Authentication;
 using ServicesImplementation.CourseModule;
+using Shared.Dtos;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LMS.Api
@@ -40,13 +49,41 @@ namespace LMS.Api
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
+
+            var jwtoptions = builder.Configuration.GetSection("JwtOptions").Get<JwtOptions>();
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidAudience = jwtoptions.Audiance,
+                    ValidIssuer = jwtoptions.Issure,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtoptions.Key))
+                };
+            });
+
+            builder.Services.AddAuthorization();
+
             builder.Services.AddScoped(typeof(IGenericReposatory<>), typeof(GenericReposatory<>));
             builder.Services.AddScoped<IUniteOfWork, UniteOfWork>();
             builder.Services.AddAutoMapper(ctf => { },typeof(ServiceProjectReference).Assembly);
             builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
-        
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.CustomResponse;
+            });
 
 
 
@@ -73,8 +110,10 @@ namespace LMS.Api
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<CustomExceptionMiddleware>();
             app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

@@ -26,7 +26,7 @@ namespace ServicesImplementation.CourseModule
 
         public async Task<IEnumerable<CourseDto>> GetAllCourses()
         {
-            var courses = await _UOW.GetReposatory<Course>().GetQueryable()
+            var courses = await _UOW.GetReposatory<Course>().GetQueryable().Where(c => c.IsDeleted != true)
                 .Include(c => c.Level)
                 .Select(c => new CourseDto
                 {
@@ -49,7 +49,7 @@ namespace ServicesImplementation.CourseModule
 
         public async Task<CourseDto> GetCourseById(Guid id)
         {
-            var course = await _UOW.GetReposatory<Course>().GetQueryable()
+            var course = await _UOW.GetReposatory<Course>().GetQueryable().Where(c => c.IsDeleted != true)
                 .Include(c => c.Level)
                 .Include(c => c.Modules)
                 .ThenInclude(m => m.Lectures)
@@ -67,6 +67,8 @@ namespace ServicesImplementation.CourseModule
         public async Task<CourseDto> CreateCourse(CreateOrUpdateCourseDto course)
         {
             var NewCourse = _Mapper.Map<Course>(course);
+
+            NewCourse.CreatedAt = DateTime.Now;
 
             await _UOW.GetReposatory<Course>().AddAsync(NewCourse);
 
@@ -89,6 +91,8 @@ namespace ServicesImplementation.CourseModule
             }
 
             _Mapper.Map(course, OldCourse);
+
+            OldCourse.UpdatedAt = DateTime.Now;
             var res = await _UOW.SaveChangesAsync();
 
             if (res <= 0)

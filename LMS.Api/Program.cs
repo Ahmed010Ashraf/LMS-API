@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Presistence.Data;
 using Presistence.Reposatories;
+using ServicesAbstraction;
 using ServicesAbstraction.Authentication;
 using ServicesAbstraction.CourseModule;
 using ServicesImplementation;
@@ -78,6 +79,7 @@ namespace LMS.Api
             builder.Services.AddAutoMapper(ctf => { },typeof(ServiceProjectReference).Assembly);
             builder.Services.AddScoped<ICourseService, CourseService>();
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             builder.Services.Configure<ApiBehaviorOptions>(options =>

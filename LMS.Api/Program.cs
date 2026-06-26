@@ -88,17 +88,6 @@ namespace LMS.Api
             });
 
 
-
-
-
-
-
-
-
-
-
-
-
             var app = builder.Build();
 
             using var scope = app.Services.CreateScope();
@@ -115,8 +104,8 @@ namespace LMS.Api
             app.UseMiddleware<CustomExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
 
             app.MapControllers();

@@ -15,6 +15,8 @@ namespace Shared.Dtos.CourseModule
 
         public string? PicUrl { get; set; }
 
+        public int Price { get; set; }  
+
         public Guid LevelId { get; set; }
 
         public string LevelName { get; set; } = null!;

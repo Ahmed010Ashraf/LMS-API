@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,9 @@ namespace Shared.Dtos.CourseModule
         public string Title { get; set; } = null!;
 
         public string? Description { get; set; }
+        public int Price { get; set; }
 
-        public string? PicUrl { get; set; }
+        public IFormFile? PicUrl { get; set; }
 
         public Guid LevelId { get; set; }
     }

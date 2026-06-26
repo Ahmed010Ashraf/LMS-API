@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ServicesImplementation
 {
@@ -14,7 +15,7 @@ namespace ServicesImplementation
 
         List<string> AllowedExtentions = new() { ".png", ".jpg", ".jpeg" };
         int MaxSize = 2*1024*1024;
-        public async Task<string>? Upload(IFormFile file, string FolderName = "images")
+        public async Task<string?> Upload(IFormFile file, string FolderName = "images" )
         {
             var extention = Path.GetExtension(file.FileName);
             if (!AllowedExtentions.Contains(extention))

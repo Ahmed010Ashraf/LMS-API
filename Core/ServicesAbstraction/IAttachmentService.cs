@@ -9,7 +9,7 @@ namespace ServicesAbstraction
 {
     public interface IAttachmentService
     {
-        Task<string>? Upload(IFormFile file , string FolderName);
+        Task<string?> Upload(IFormFile file , string FolderName = "images");
 
         bool Delete(string filepath);
     }

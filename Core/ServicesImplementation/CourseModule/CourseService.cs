@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServicesAbstraction;
 
 namespace ServicesImplementation.CourseModule
 {
@@ -17,11 +18,13 @@ namespace ServicesImplementation.CourseModule
     {
         private readonly IUniteOfWork _UOW;
         private readonly IMapper _Mapper;
+        private readonly IAttachmentService _AttachmentService;
 
-        public CourseService(IUniteOfWork UOW, IMapper mapper)
+        public CourseService(IUniteOfWork UOW, IMapper mapper , IAttachmentService AttachmentService)
         {
             _UOW = UOW;
             _Mapper = mapper;
+            _AttachmentService = AttachmentService;
         }
 
         public async Task<IEnumerable<CourseDto>> GetAllCourses()
@@ -69,6 +72,9 @@ namespace ServicesImplementation.CourseModule
             var NewCourse = _Mapper.Map<Course>(course);
 
             NewCourse.CreatedAt = DateTime.Now;
+            if (course.PicUrl != null) {
+                NewCourse.PicUrl = await _AttachmentService.Upload(course.PicUrl);
+            }
 
             await _UOW.GetReposatory<Course>().AddAsync(NewCourse);
 
@@ -91,6 +97,16 @@ namespace ServicesImplementation.CourseModule
             }
 
             _Mapper.Map(course, OldCourse);
+
+            if(course.PicUrl != null)
+            {
+                if(OldCourse.PicUrl != null)
+                {
+                    _AttachmentService.Delete(OldCourse.PicUrl);
+                }
+
+                OldCourse.PicUrl = await _AttachmentService.Upload(course.PicUrl);
+            }
 
             OldCourse.UpdatedAt = DateTime.Now;
             var res = await _UOW.SaveChangesAsync();

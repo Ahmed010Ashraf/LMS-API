@@ -16,6 +16,7 @@ namespace Domain.Entities.CourseEntities
         public string? Description { get; set; }
 
         public string? PicUrl { get; set; }
+        public int Price { get; set; }
 
         public Guid LevelId { get; set; }
 
